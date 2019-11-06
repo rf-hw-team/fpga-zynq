@@ -29,8 +29,8 @@
 #define CONFIG_ZYNQ_QSPI
 #define CONFIG_ZYNQ_BOOT_FREEBSD
 
-/* Define ZYBO PS Clock Frequency to 50MHz */
-#define CONFIG_ZYNQ_PS_CLK_FREQ	50000000UL
+/* Define ZYBO PS Clock Frequency to 33.3333MHz */
+#define CONFIG_ZYNQ_PS_CLK_FREQ	33333333UL
 
 #include <configs/zynq-common.h>
 

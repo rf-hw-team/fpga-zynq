@@ -297,7 +297,7 @@
 					"swdt", "dbg_trc", "dbg_apb";
 				compatible = "xlnx,ps7-clkc";
 				fclk-enable = <0xf>;
-				ps-clk-frequency = <50000000>;
+				ps-clk-frequency = <33333333>;
 				reg = <0x100 0x100>;
 			} ;
 		} ;
