@@ -6,6 +6,7 @@ import freechips.rocketchip.subsystem._
 import freechips.rocketchip.devices.tilelink.BootROMParams
 import freechips.rocketchip.rocket.{RocketCoreParams, MulDivParams, DCacheParams, ICacheParams}
 import freechips.rocketchip.tile.{RocketTileParams, BuildCore, XLen}
+import icenet.{NICKey, NICConfig}
 import testchipip._
 
 class WithBootROM extends Config((site, here, up) => {
@@ -22,6 +23,7 @@ class WithZynqAdapter extends Config((site, here, up) => {
   case BlockDeviceKey => BlockDeviceConfig(nTrackers = 2)
   case BlockDeviceFIFODepth => 16
   case NetworkFIFODepth => 16
+  case NICKey => NICConfig(ctrlQueueDepth = 64)
 })
 
 class WithNMediumCores(n: Int) extends Config((site, here, up) => {

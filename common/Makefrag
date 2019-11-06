@@ -7,9 +7,10 @@ TOP_MODULE ?= Top
 CFG_PROJECT ?= $(TOP_MODULE_PROJECT)
 CONFIG ?= ZynqConfig
 SCALA_VERSION=2.11.12
-EXTRA_PACKAGES=testchipip
+EXTRA_PACKAGES=testchipip icenet
 
 base_dir = $(abspath ..)
+icenet = $(base_dir)/icenet
 common = $(base_dir)/common
 common_build = $(common)/build
 testchipip = $(base_dir)/testchipip
@@ -209,6 +210,8 @@ fesvr-srcs = \
 	$(common)/csrc/fesvr_zynq.cc \
 	$(common)/csrc/zynq_driver.cc \
 	$(testchipip)/csrc/blkdev.cc \
+	$(icenet)/csrc/device.cc \
+	$(icenet)/csrc/switch.cc \
 
 fesvr-hdrs = \
 	$(common)/csrc/zynq_driver.h \
@@ -219,7 +222,7 @@ fesvr-lib = $(common_build)/libfesvr.so
 CXX_FPGA      = arm-xilinx-linux-gnueabi-g++
 CXXFLAGS_FPGA = -O2 -std=c++11 -Wall -L$(common_build) -lfesvr \
                 -Wl,-rpath,/usr/local/lib \
-		-I $(common)/csrc -I $(testchipip)/csrc \
+		-I $(common)/csrc -I $(testchipip)/csrc -I $(icenet)/csrc \
 		-I $(ROCKET_DIR)/riscv-tools/riscv-fesvr/ \
 		-Wl,-rpath,/usr/local/lib \
 

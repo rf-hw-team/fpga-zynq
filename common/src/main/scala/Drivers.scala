@@ -8,6 +8,8 @@ import freechips.rocketchip.tilelink._
 import freechips.rocketchip.util._
 import testchipip._
 import testchipip.SerialAdapter._
+import icenet._
+import icenet.IceNetConsts._
 
 class InFIFODriver(name: String, addr: BigInt, maxSpace: Int)
     (implicit p: Parameters) extends LazyModule {
@@ -269,5 +271,33 @@ class BlockDeviceDriver(implicit p: Parameters) extends LazyModule {
     respdrv.module.io.in <> desser.io.ser.resp
     infodrv.module.io.values := Seq(
       io.bdev.info.nsectors, io.bdev.info.max_req_len)
+  }
+}
+
+class NetworkDriver(implicit p: Parameters) extends LazyModule {
+  val base = p(ZynqAdapterBase)
+  val depth = p(NetworkFIFODepth)
+
+  val node = TLIdentityNode()
+  val xbar = LazyModule(new TLXbar)
+  val outdrv = LazyModule(new OutFIFODriver("net-out", base + BigInt(0x40), depth))
+  val indrv  = LazyModule(new InFIFODriver("net-in", base + BigInt(0x48), depth))
+
+  xbar.node := outdrv.node
+  xbar.node := indrv.node
+  node := xbar.node
+
+  lazy val module = new LazyModuleImp(this) {
+    val (tl, edge) = node.out(0)
+    val dataBits = edge.bundle.dataBits
+
+    val io = IO(new Bundle {
+      val net = new NICIO
+    })
+
+    val desser = Module(new NetworkDesser(dataBits))
+    desser.io.ser.out <> outdrv.module.io.out
+    indrv.module.io.in <> desser.io.ser.in
+    io.net <> desser.io.net
   }
 }
